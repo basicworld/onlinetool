@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>在线工具箱--密码生成器</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="container">
+        <div class="page-header text-center">
+            <h1>密码生成器</h1>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-6">
+                <form role="form" class="form-horizontal">
+                    <div class="form-group">
+                        <label for="string" class="col-sm-3 control-label">所用字符</label>
+                        <div class="col-sm-9">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="string" id="num" value="num" checked> 0-9
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="string" id="small" value="small" checked> a-z
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="string" id="big" value="big"> A-Z
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="length" class="col-sm-3 control-label">密码长度</label>
+                        <div class="col-sm-9">
+                            <label>
+                                <input type="radio" name="length" id="length8" value="8"> 8位
+                            </label>
+                            <label>
+                                <input type="radio" name="length" id="length16" value="16"> 16位
+                            </label>
+                            <label>
+                                <input type="radio" name="length" id="length32" value="32" checked> 32位
+                            </label></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="result" class="col-sm-3 control-label">生成结果</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="result" readonly>
+                            <div id="msg" style="color: grey">支持自动复制到剪贴板（需开启剪贴板访问权限）</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <button type="button" class="btn btn-primary" id="createBtn">生成密码</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3">
+            </div>
+        </div> <!-- /container -->
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="/static/js/jquery-1.12.4.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+        $("#createBtn").click(function() {
+            var stringType = checkAll($("input:checkbox"));
+            var length = checkAll($("input:radio"))[0];
+            console.log(length);
+            $("#result").val(getRandomString(length, stringType));
+            $("#result").select();
+            document.execCommand("Copy");
+            $("#msg").text("密码已生成！");
+            $("#msg").css("color", "green");
+        });
+        //获取单选或者多选的值，返回一个值得数组，如果没有值，返回空数组，参数inputlist是jQuery对象
+        function checkAll(inputlist) {
+            var arr = [];
+            var num = inputlist.length;
+            for (var i = 0; i < num; i++) {
+                if (inputlist.eq(i).is(":checked")) {
+                    arr.push(inputlist.eq(i).val());
+                }
+            }
+            return arr;
+        }
+        // 获取长度为len的随机字符串
+        function getRandomString(len, stringType) {
+            len = parseInt(len);
+            var chars = '';
+            if(stringType.indexOf("num") > -1){
+              chars  += "0123456789";
+            }
+            if(stringType.indexOf("small") > -1){
+              chars  += "abcdefhijkmnprstwxyz";
+            }
+            if(stringType.indexOf("big") > -1){
+              chars  += "ABCDEFGHJKMNPQRSTWXYZ";
+            }
+
+            var maxPos = chars.length;
+            var pwd = '';
+            for (i = 0; i < len; i++) {
+                pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+            }
+            return pwd;
+        }
+        </script>
+</body>
+
+</html>
